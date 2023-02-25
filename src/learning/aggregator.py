@@ -55,11 +55,11 @@ class Aggregator():
         model = utils.model_init()
         if global_epoch == 0:
             print('Initial model . . .')
-            # model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
-            # model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
-            pickle.dump(model.get_weights(), open('aggregator_storage/aggregator_models/model_ep0.h5','wb'))
-            model = pickle.load(open('aggregator_storage/aggregator_models/model_ep0.h5','rb'))
-            return model
+            model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
+            model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
+            # pickle.dump(model.get_weights(), open('aggregator_storage/aggregator_models/model_ep0.h5','wb'))
+            # model = pickle.load(open('aggregator_storage/aggregator_models/model_ep0.h5','rb'))
+            return model.get_weights()
         else:
             print('Load global model %d'%(global_epoch))
             model_paths = ['aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch-1)]
