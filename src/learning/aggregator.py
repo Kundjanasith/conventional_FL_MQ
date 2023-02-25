@@ -58,5 +58,5 @@ class Aggregator():
         else:
             print('Load global model %d'%(self.global_epoch))
             model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
-        model_paths = 
+        # model_paths = 
 
