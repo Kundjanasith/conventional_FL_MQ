@@ -10,9 +10,9 @@ TRAINER_IP = config['DISTRIBUTION']['TRAINER_IP']
 
 def task_routes_init():
     result = {}
-    result['learning.tasks.aggregate'] = {'queue': 'aggregator'}
+    result['learning.tasks.aggregator'] = {'queue': 'aggregator'}
     for i in range(len(ast.literal_eval(config['DISTRIBUTION']['TRAINER_IP']))):
-        result['learning.tasks.train'] = {'queue': 'trainer%d'%(i+1)}
+        result['learning.tasks.trainer'] = {'queue': 'trainer%d'%(i+1)}
      
 app = Celery(
     "fedlearn",

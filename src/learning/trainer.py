@@ -41,9 +41,9 @@ class Trainer():
 
     def training(self):
         model = utils.model_init()
-        model.load_weights('aggregator_storage/model_ep%d.h5'%(global_epoch))
+        model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
         x_train, y_train = sampling_data(self.num_samples)
         model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
         model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
-        model.save_weights('trained_storage/%s_ep%d.h5'%(hostname,global_epoch+1))
+        model.save_weights('trainer_storage/trainer_models/%s_ep%d.h5'%(hostname,global_epoch+1))
         return model    

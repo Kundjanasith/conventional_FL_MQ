@@ -3,7 +3,7 @@ from learning.trainer import Trainer
 from learning.aggregator import Aggregator
 
 @app.task
-def train(data=None):
+def trainer(data):
     t = Trainer(hostname,)
     
     # if data and data >= MAX_TRAINING_ROUNDS:
@@ -16,8 +16,9 @@ def train(data=None):
     # result = rollup.delay(result)
     # return result.id
 
-@app.task
-def rollup(data):
+@app.task(r)
+def aggregator(data):
+    print('tem',r)
     # agr = Aggregator()
     # new_data = agr.rollup_round(data)
     # print(f"Rollup data {new_data}")
