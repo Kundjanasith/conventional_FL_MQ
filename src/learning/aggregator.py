@@ -55,8 +55,14 @@ class Aggregator():
             print('Initial model . . .')
             model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
+            return model
         else:
             print('Load global model %d'%(global_epoch))
-            model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
-        # model_paths = 
+            model_paths = ['aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch-1)]
+            for p in glob.glob('aggregator_storage/trainer_models/*_ep%d.h5'%(self.global_epoch-1))
+                model_paths.append(p)
+            aggregated_model = aggregation(model_paths)
+            aggregated_model.save_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
+            aggregated_model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
+            return aggregated_model
 

@@ -30,20 +30,19 @@ def sampling_data(num_samples):
 
 class Trainer():
 
-    def __init__(self, hostname, global_epoch):
-        self.hostname = hostname
-        self.global_epoch = global_epoch
+    def __init__(self):
         config = configparser.ConfigParser()
         config.read('../config.ini')
         self.num_samples = int(config['TRAINING']['NUM_SAMPLES'])
         self.local_batch_size = int(config['TRAINING']['LOCAL_BATCH_SIZE'])
         self.local_epochs = int(config['TRAINING']['LOCAL_EPOCHS'])
 
-    def training(self):
-        model = utils.model_init()
-        model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
+    def training(self, model):
+        # model = utils.model_init()
+        # model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
         x_train, y_train = sampling_data(self.num_samples)
         model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
         model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
         model.save_weights('trainer_storage/trainer_models/%s_ep%d.h5'%(hostname,global_epoch+1))
-        return model    
+        return model 
+        

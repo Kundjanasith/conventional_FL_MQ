@@ -3,9 +3,10 @@ from learning.trainer import Trainer
 from learning.aggregator import Aggregator
 
 @app.task
-def trainer(data):
-    t = Trainer(hostname,)
-    
+def trainer(aggregated_model):
+    t = Trainer()
+    result = t.training(aggregated_model)
+
     # if data and data >= MAX_TRAINING_ROUNDS:
     #     print("training completed")
     #     return 0
@@ -13,13 +14,11 @@ def trainer(data):
     # t1 = Trainer()
     # result = t1.training_round(data)
     # print(f"Training data {result}")
-    # result = rollup.delay(result)
-    # return result.id
+    result = aggregate.delay(result)
+    return result.id
 
 @app.task
-def aggregator(data):
-    print('tem',data)
-    agr = Aggregator()
-    # new_data = agr.rollup_round(data)
-    # print(f"Rollup data {new_data}")
-    # train.delay(new_data)
+def aggregator(global_epoch):
+    a = Aggregator()
+    aggregated_model = a.aggregate(global_epoch)
+    trainer.delay(aggregated_model)

@@ -6,7 +6,7 @@ def main():
     config.read('../config.ini')
     num_communication_rounds = int(config['TRAINING']['NUM_COMMUNICATION_ROUNDS'])
     for r in range(num_communication_rounds):
-        res = aggregator.apply_async(args=(r), queue='aggregator', countdown=2)
+        res = aggregator.apply_async(kwargs={'global_epoch': r}, queue='aggregator', countdown=2)
         result = res.get(timeout=4, propagate=False)
         print(result)
         print(res.failed())
