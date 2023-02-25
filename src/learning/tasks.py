@@ -2,7 +2,7 @@ from app import app
 from learning.trainer import Trainer
 from learning.aggregator import Aggregator
 
-@app.task
+@app.task(serializer='json')
 def trainer(aggregated_model):
     t = Trainer()
     result = t.training(aggregated_model)
@@ -17,7 +17,7 @@ def trainer(aggregated_model):
     result = aggregate.delay(result)
     return result.id
 
-@app.task
+@app.task(serializer='json')
 def aggregator(global_epoch):
     a = Aggregator()
     aggregated_model = a.aggregate(global_epoch)
