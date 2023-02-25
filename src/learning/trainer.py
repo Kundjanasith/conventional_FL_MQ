@@ -3,7 +3,8 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.backend import clear_session
 import utils, configparser
-import h5py
+import h5py, json
+import numpy as np 
 
 def load_dataset():
     (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
@@ -38,11 +39,12 @@ class Trainer():
         self.local_batch_size = int(config['TRAINING']['LOCAL_BATCH_SIZE'])
         self.local_epochs = int(config['TRAINING']['LOCAL_EPOCHS'])
 
-    def training(self, model):
+    def training(self, model_weights):
         # print(model)
 
         model = utils.model_init()
-        model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
+        model.load_weights(np.array(model_weights))
+        # model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
         x_train, y_train = sampling_data(self.num_samples)
         model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
         model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
