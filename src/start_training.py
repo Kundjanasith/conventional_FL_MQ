@@ -1,4 +1,4 @@
-from fedlearn.tasks import trainer, aggregator
+from learning.tasks import trainer, aggregator
 import sys, configparser
 
 def main():

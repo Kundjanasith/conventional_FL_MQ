@@ -8,7 +8,7 @@ docker run --rm -d -p 15671:15671/tcp -p 15672:15672/tcp -p 15691:15691/tcp -p 1
 ```
 
 ```
-celery -A fedlearn.tasks worker --loglevel=INFO -Q aggr1 --concurrency=1 -n aggr1@%h
+celery -A learning.tasks worker --loglevel=INFO -Q aggregator --concurrency=1 -n aggregator@%h
 celery -A fedlearn.tasks worker --loglevel=INFO -Q trainer1 --concurrency=1 -n trainer1@%h
 python3 start_training.py
 ```
