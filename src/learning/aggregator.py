@@ -57,7 +57,7 @@ class Aggregator():
             print('Initial model . . .')
             # model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             # model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
-            pickle.dump(model, open('aggregator_storage/aggregator_models/model_ep0.h5','wb'))
+            pickle.dump(model.get_weights(), open('aggregator_storage/aggregator_models/model_ep0.h5','wb'))
             model = pickle.load(open('aggregator_storage/aggregator_models/model_ep0.h5','rb'))
             return model
         else:
