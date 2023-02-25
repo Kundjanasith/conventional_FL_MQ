@@ -46,17 +46,17 @@ def aggregation(model_path):
 
 class Aggregator():
     
-    def __init__(self, hostname='aggregator', global_epoch):
-        self.global_epoch = global_epoch
+    # def __init__(self):
+    #     self.global_epoch = global_epoch
 
-    def aggregate(self):
+    def aggregate(self, global_epoch):
         model = utils.model_init()
-        if self.global_epoch == 0:
+        if global_epoch == 0:
             print('Initial model . . .')
             model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
         else:
-            print('Load global model %d'%(self.global_epoch))
+            print('Load global model %d'%(global_epoch))
             model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
         # model_paths = 
 
