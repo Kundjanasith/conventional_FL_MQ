@@ -16,9 +16,9 @@ def trainer(data):
     # result = rollup.delay(result)
     # return result.id
 
-@app.task(r)
+@app.task
 def aggregator(data):
-    print('tem',r)
+    print('tem',data)
     # agr = Aggregator()
     # new_data = agr.rollup_round(data)
     # print(f"Rollup data {new_data}")
