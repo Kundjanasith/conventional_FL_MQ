@@ -19,7 +19,7 @@ def trainer(data):
 @app.task
 def aggregator(data):
     print('tem',data)
-    # agr = Aggregator()
+    agr = Aggregator()
     # new_data = agr.rollup_round(data)
     # print(f"Rollup data {new_data}")
     # train.delay(new_data)
