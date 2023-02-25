@@ -1,5 +1,6 @@
 import utils, glob
 from tensorflow.keras.backend import clear_session
+import h5py
 
 def getLayerIndexByName(model, layername):
     for idx, layer in enumerate(model.layers):
@@ -55,7 +56,8 @@ class Aggregator():
             print('Initial model . . .')
             model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
-            return model
+            res = h5py.File('aggregator_storage/aggregator_models/model_ep0.h5', 'r')
+            return res
         else:
             print('Load global model %d'%(global_epoch))
             model_paths = ['aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch-1)]
@@ -64,5 +66,6 @@ class Aggregator():
             aggregated_model = aggregation(model_paths)
             aggregated_model.save_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
             aggregated_model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
-            return aggregated_model
+            res = h5py.File('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch), 'r')
+            return res
 
