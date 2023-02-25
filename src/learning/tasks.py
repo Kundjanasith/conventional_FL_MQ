@@ -4,7 +4,7 @@ from learning.aggregator import Aggregator
 
 @app.task
 def train(data=None):
-    t = Trainer()
+    t = Trainer(hostname,)
     
     # if data and data >= MAX_TRAINING_ROUNDS:
     #     print("training completed")

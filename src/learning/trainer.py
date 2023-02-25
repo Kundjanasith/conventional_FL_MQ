@@ -2,7 +2,7 @@ from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.backend import clear_session
-import utils 
+import utils, configparser
 
 def load_dataset():
     (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
