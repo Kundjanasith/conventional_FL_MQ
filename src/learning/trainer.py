@@ -6,6 +6,8 @@ import utils, configparser
 import h5py, json
 import numpy as np 
 import base64
+import json
+from json import JSONEncoder
 
 def load_dataset():
     (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
