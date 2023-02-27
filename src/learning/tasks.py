@@ -3,9 +3,9 @@ from learning.trainer import Trainer
 from learning.aggregator import Aggregator
 
 @app.task()
-def trainer(aggregated_model):
+def trainer(model_weights):
     t = Trainer()
-    result = t.training(aggregated_model)
+    result = t.training(model_weights)
 
     # if data and data >= MAX_TRAINING_ROUNDS:
     #     print("training completed")
@@ -22,3 +22,4 @@ def aggregator(global_epoch):
     a = Aggregator()
     aggregated_model = a.aggregate(global_epoch)
     trainer.delay(aggregated_model)
+    return aggregated_model

@@ -5,6 +5,7 @@ from tensorflow.keras.backend import clear_session
 import utils, configparser
 import h5py, json
 import numpy as np 
+import base64
 
 def load_dataset():
     (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
@@ -41,9 +42,18 @@ class Trainer():
 
     def training(self, model_weights):
         # print(model)
-
+        # print('x',model_weights)
+        print('1')
         model = utils.model_init()
-        model.load_weights(np.array(model_weights))
+        print('2')
+        # model_weights = np.array(model_weights)
+        # print('3x',type(model_weights))
+        x = base64.b64decode(model_weights)
+        print('3.5',type(x))
+        model_weights = np.load(model_weights)
+        print('4',type(model_weights))
+        model.set_weights(model_weights)
+        print('5')
         # model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
         x_train, y_train = sampling_data(self.num_samples)
         model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])

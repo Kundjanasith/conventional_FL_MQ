@@ -2,6 +2,8 @@ import utils, glob
 from tensorflow.keras.backend import clear_session
 import h5py
 import pickle, json
+import base64
+import numpy as np
 
 def getLayerIndexByName(model, layername):
     for idx, layer in enumerate(model.layers):
@@ -55,13 +57,11 @@ class Aggregator():
         model = utils.model_init()
         if global_epoch == 0:
             print('Initial model . . .')
-            # model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
-            # model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
-            # pickle.dump(model.get_weights(), open('aggregator_storage/aggregator_models/model_ep0.h5','wb'))
-            # model = pickle.load(open('aggregator_storage/aggregator_models/model_ep0.h5','rb'))
-            model_weights = model.get_weights().tolist()
-            # file_path = "'aggregator_storage/aggregator_models/model_ep0.h5'"
-            # json.dump(model_weights, codecs.open(file_path, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+            model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
+            model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
+            model_weights = model.get_weights()
+            model_weights = np.array(model_weights, dtype=object)
+            model_weights = base64.b64encode(np.array(model_weights).dumps()).decode()
             return model_weights
         else:
             print('Load global model %d'%(global_epoch))
