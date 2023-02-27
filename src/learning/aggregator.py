@@ -59,6 +59,7 @@ class Aggregator():
 
     def aggregate(self, list_local_models, global_epoch):
         model = utils.model_init()
+        print('---->'+str(len(list_local_models))+str(global_epoch))
         if global_epoch == 0:
             print('Initial model . . .')
             model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
@@ -71,7 +72,14 @@ class Aggregator():
             print(len(list_local_models))
             for i in list_local_models:
                 print(i)
+            
             print(glob.glob('aggregator_storage/trainer_models/*_ep%d.h5'%global_epoch))
+            model.save_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%global_epoch)
+            model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
+            model_weights = model.get_weights()
+            model_weights = json.dumps(model_weights, cls=utils.NumpyArrayEncoder)
+            return model_weights
+
             # print('tem list of model weights',len(list_model_weights))
             # for i in list_model_weights.keys():
             #     print(i)

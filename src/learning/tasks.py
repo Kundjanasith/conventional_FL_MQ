@@ -32,6 +32,11 @@ def aggregator(list_local_models, global_epoch):
     # aggregated_model = a.aggregate(list_local_models, global_epoch)
     return aggregated_model
 
+@app.task()
+def test(global_epoch):
+    print('--->',global_epoch)
+    return global_epoch
+
 # @app.task()
 # def aggregator(global_epoch):
 #     a = Aggregator()
