@@ -48,6 +48,12 @@ def aggregation(model_path):
         aggregated_model.get_layer(index=l_idx).set_weights(w_arr)
     return aggregated_model
 
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, numpy.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
+
 class Aggregator():
     
     # def __init__(self):
@@ -60,8 +66,9 @@ class Aggregator():
             model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model_weights = model.get_weights()
-            model_weights = np.array(model_weights, dtype=object)
-            model_weights = base64.b64encode(np.array(model_weights).dumps()).decode()
+            # model_weights = np.array(model_weights, dtype=object)
+            # model_weights = base64.b64encode(np.array(model_weights).dumps()).decode()
+            model_weights = json.dumps(model_weights, cls=NumpyArrayEncoder)
             return model_weights
         else:
             print('Load global model %d'%(global_epoch))

@@ -31,6 +31,12 @@ def sampling_data(num_samples):
     new_y_train = np.asarray([y_train[k] for k in split_data_index])
     return new_x_train, 
 
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, numpy.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
+
 class Trainer():
 
     def __init__(self):
@@ -46,11 +52,13 @@ class Trainer():
         print('1')
         model = utils.model_init()
         print('2')
+        model_weights = json.loads(model_weights)
+        print(type(model_weights))
         # model_weights = np.array(model_weights)
         # print('3x',type(model_weights))
-        x = base64.b64decode(model_weights)
-        print('3.5',type(x))
-        model_weights = np.load(model_weights)
+        # x = base64.b64decode(model_weights)
+        # print('3.5',type(x))
+        # model_weights = np.load(model_weights)
         # print('4',type(model_weights))
         # model.set_weights(model_weights)
         # model.save_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
