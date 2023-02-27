@@ -35,7 +35,7 @@ def sampling_data(num_samples):
 
 class NumpyArrayEncoder(JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, numpy.ndarray):
+        if isinstance(obj, np.ndarray):
             return obj.tolist()
         return JSONEncoder.default(self, obj)
 
