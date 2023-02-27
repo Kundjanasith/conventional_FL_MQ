@@ -52,12 +52,12 @@ class Trainer():
         print('3.5',type(x))
         model_weights = np.load(model_weights)
         print('4',type(model_weights))
-        model.set_weights(model_weights)
+        # model.set_weights(model_weights)
         print('5')
         # model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
-        x_train, y_train = sampling_data(self.num_samples)
-        model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
-        model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
-        model.save_weights('trainer_storage/trainer_models/%s_ep%d.h5'%(hostname,global_epoch+1))
+        # x_train, y_train = sampling_data(self.num_samples)
+        # model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
+        # model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
+        # model.save_weights('trainer_storage/trainer_models/%s_ep%d.h5'%(hostname,global_epoch+1))
         return model 
         
