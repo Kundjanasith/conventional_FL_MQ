@@ -8,6 +8,7 @@ import numpy as np
 import base64
 import json
 from json import JSONEncoder
+import random
 
 def load_dataset():
     (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
@@ -31,7 +32,7 @@ def sampling_data(num_samples):
             split_data_index.append(item)
     new_x_train = np.asarray([x_train[k] for k in split_data_index])
     new_y_train = np.asarray([y_train[k] for k in split_data_index])
-    return new_x_train, 
+    return new_x_train, new_y_train
 
 class NumpyArrayEncoder(JSONEncoder):
     def default(self, obj):
@@ -48,27 +49,21 @@ class Trainer():
         self.local_batch_size = int(config['TRAINING']['LOCAL_BATCH_SIZE'])
         self.local_epochs = int(config['TRAINING']['LOCAL_EPOCHS'])
 
-    def training(self, model_weights):
+    def training(self, queue_name, model_weights, global_epoch):
         # print(model)
         # print('x',model_weights)
         print('1')
         model = utils.model_init()
         print('2')
         model_weights = json.loads(model_weights)
-        print(type(model_weights))
-        # model_weights = np.array(model_weights)
-        # print('3x',type(model_weights))
-        # x = base64.b64decode(model_weights)
-        # print('3.5',type(x))
-        # model_weights = np.load(model_weights)
-        # print('4',type(model_weights))
-        # model.set_weights(model_weights)
-        # model.save_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
-        # print('5')
-        # model.load_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
-        # x_train, y_train = sampling_data(self.num_samples)
-        # model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
-        # model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
-        # model.save_weights('trainer_storage/trainer_models/%s_ep%d.h5'%(hostname,global_epoch+1))
-        return model 
+        model_weights = np.asarray(model_weights, dtype=object)
+        model = utils.load_weights(model, model_weights)
+        model.save_weights('trainer_storage/aggregator_models/model_ep%d.h5'%(global_epoch))
+        x_train, y_train = sampling_data(self.num_samples)
+        model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
+        model.fit(x_train, y_train,epochs=self.local_epochs,batch_size=self.local_batch_size,verbose=1,validation_split=0.2)
+        model.save_weights('trainer_storage/trainer_models/%s_ep%d.h5'%(queue_name,global_epoch+1))
+        model_weights = model.get_weights()
+        model_weights = json.dumps(model_weights, cls=utils.NumpyArrayEncoder)
+        return model_weights
         

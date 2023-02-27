@@ -50,36 +50,46 @@ def aggregation(model_path):
         aggregated_model.get_layer(index=l_idx).set_weights(w_arr)
     return aggregated_model
 
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
+
 
 class Aggregator():
     
     # def __init__(self):
     #     self.global_epoch = global_epoch
 
-    def aggregate(self, global_epoch):
+    def aggregate(self, list_local_models, global_epoch):
         model = utils.model_init()
         if global_epoch == 0:
             print('Initial model . . .')
             model.save_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model.load_weights('aggregator_storage/aggregator_models/model_ep0.h5')
             model_weights = model.get_weights()
-            # model_weights = np.array(model_weights, dtype=object)
-            # model_weights = base64.b64encode(np.array(model_weights).dumps()).decode()
-            model_weights = json.dumps(model_weights, cls=NumpyArrayEncoder)
+            model_weights = json.dumps(model_weights, cls=utils.NumpyArrayEncoder)
             return model_weights
         else:
-            print('Load global model %d'%(global_epoch))
-            model_paths = ['aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch-1)]
-            for p in glob.glob('aggregator_storage/trainer_models/*_ep%d.h5'%(self.global_epoch-1)):
-                model_paths.append(p)
-            aggregated_model = aggregation(model_paths)
-            aggregated_model.save_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
-            aggregated_model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
-            res = h5py.File('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch), 'r')
-            return res
+            print('xxxxx')
+            print(len(list_local_models))
+            for i in list_local_models:
+                print(i)
+            print(glob.glob('aggregator_storage/trainer_models/*_ep%d.h5'%global_epoch))
+            # print('tem list of model weights',len(list_model_weights))
+            # for i in list_model_weights.keys():
+            #     print(i)
+            #     print(type(list_model_weights[i]))
+            # print('Load global model %d'%(global_epoch))
+            # model_paths = ['aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch-1)]
+            # for p in glob.glob('aggregator_storage/trainer_models/*_ep%d.h5'%(self.global_epoch-1)):
+            #     model_paths.append(p)
+            # aggregated_model = aggregation(model_paths)
+            # aggregated_model.save_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
+            # aggregated_model.load_weights('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch))
+            # res = h5py.File('aggregator_storage/aggregator_models/model_ep%d.h5'%(self.global_epoch), 'r')
+            return 'p'
 
+    # def collect(self, queue_name, model_weights, global_epoch):
+    #     model = utils.model_init()
+    #     model_weights = json.loads(model_weights)
+    #     model_weights = np.asarray(model_weights, dtype=object)
+    #     model = utils.load_weights(model, model_weights)
+    #     model.save_weights('aggregator_storage/trainer_models/%s_ep%d.h5'%(queue_name,global_epoch))
+    #     return 'store aggregator_storage/trainer_models/%s_ep%d.h5'%(queue_name,global_epoch)
