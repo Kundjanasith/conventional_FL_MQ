@@ -1,32 +1,36 @@
+import configparser
+
 from celery import Celery
-import configparser, ast
+
+from learning.config import CONFIG
 
 config = configparser.ConfigParser()
-config.read('../config.ini')
+config.read("../config.ini")
 
-PYAMQP_IP = config['DISTRIBUTION']['PYAMQP_IP']
-AGGRGATOR_IP = config['DISTRIBUTION']['AGGREGATOR_IP']
-TRAINER_IP = config['DISTRIBUTION']['TRAINER_IP']
+PYAMQP_IP = config["DISTRIBUTION"]["PYAMQP_IP"]
+AGGRGATOR_IP = config["DISTRIBUTION"]["AGGREGATOR_IP"]
+TRAINER_IP = config["DISTRIBUTION"]["TRAINER_IP"]
 
-def task_routes_init():
+
+def task_routes_init() -> dict:
     result = {}
-    result['learning.tasks.aggregator'] = {'queue': 'aggregator'}
-    for i in range(len(ast.literal_eval(config['DISTRIBUTION']['TRAINER_IP']))):
-        result['learning.tasks.trainer'] = {'queue': 'trainer%d'%(i+1)}
-     
+    result["learning.tasks.celery_aggregate"] = {"queue": "aggregator"}
+    trainers_bound = int(CONFIG["training"]["num_trainers"]) + 1
+    for idx in range(1, trainers_bound):
+        result["learning.tasks.celery_train"] = {"queue": f"trainer{idx}"}
+    return result
+
+
 app = Celery(
     "fedlearn",
     backend="rpc://",
-    broker="pyamqp://myuser:mypassword@%s:5672/myvhost"%PYAMQP_IP,
+    broker=f"pyamqp://myuser:mypassword@{PYAMQP_IP}:5672/myvhost",
     include=["learning.tasks"],
 )
 
 app.conf.update(
     result_expires=3600,
-)
-
-app.conf.update(
-    task_routes = task_routes_init(),
+    task_routes=task_routes_init(),
 )
 
 if __name__ == "__main__":
