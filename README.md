@@ -17,6 +17,5 @@ rabbitmqctl set_permissions -p myvhost myuser ".*" ".*" ".*"
 ```
 celery -A learning.tasks worker --loglevel=INFO -Q aggregator --concurrency=1 -n aggregator@%h
 celery -A learning.tasks worker --loglevel=INFO -Q trainer1 --concurrency=1 -n trainer1@%h
-celery -A learning.tasks worker --loglevel=INFO -Q trainer2 --concurrency=1 -n trainer2@%h
 python3 start_training.py
 ```
