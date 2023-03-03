@@ -4,7 +4,7 @@ CONFIG = {
         "num_samples": 100,
         "local_batch_size": 8,
         "local_epochs": 5,
-        "num_trainers": 5,
+        "num_trainers": 4,
         "trainer_name_prefix": "trainer",
     },
     "distribution": {
