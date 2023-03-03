@@ -3,7 +3,7 @@ import json
 import numpy as np
 from tensorflow.keras.backend import clear_session
 
-import utils
+import utils, glob
 
 
 def getLayerIndexByName(model, layername):
@@ -53,16 +53,28 @@ def aggregation(model_path):
 
 class Aggregator:
     def aggregate(self, list_local_models: dict, global_epoch: int):
+        print('----->',global_epoch)
         model = utils.model_init()
         if global_epoch == 0:
             print("Loading initial model paramters . . .")
             model.save_weights("aggregator_storage/aggregator_models/model_ep0.h5")
         else:
+            for queue_name in list_local_models.keys():
+                print('xxx',queue_name,type(list_local_models[queue_name]))
+                model_weights = json.loads(list_local_models[queue_name])
+                model_weights = np.asarray(model_weights, dtype=object)
+                model = utils.load_weights(model, model_weights)
+                model.save_weights(
+                    f"aggregator_storage/trainer_models/{queue_name}_ep{global_epoch}.h5"
+                )
+            model_path = [f"aggregator_storage/aggregator_models/model_ep{global_epoch-1}.h5"]
+            for p in glob.glob(f"aggregator_storage/trainer_models/*_ep{global_epoch}.h5"):
+                model_path.append(p)
+            aggregated_model = aggregation(model_path)
             model.save_weights(
                 f"aggregator_storage/aggregator_models/model_ep{global_epoch}.h5"
             )
-
-        model.load_weights("aggregator_storage/aggregator_models/model_ep0.h5")
+        model.load_weights(f"aggregator_storage/aggregator_models/model_ep{global_epoch}.h5")
         model_weights = model.get_weights()
         model_weights = json.dumps(model_weights, cls=utils.NumpyArrayEncoder)
         return model_weights

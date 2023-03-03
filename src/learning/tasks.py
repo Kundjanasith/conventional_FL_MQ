@@ -44,9 +44,10 @@ def celery_train(queue_name: str, model_weights, global_epoch) -> None:
     trained_model = trainer.train(queue_name, model_weights, global_epoch)
     model_weights = json.dumps(trained_model, cls=utils.NumpyArrayEncoder)
     list_model_weights = {}
-    list_model_weights["sender_name"] = CONFIG["sender_name"]
-    list_model_weights["queue_name"] = queue_name
-    list_model_weights["weights"] = model_weights
+    # list_model_weights["sender_name"] = CONFIG["sender_name"]
+    # list_model_weights["queue_name"] = queue_name
+    # list_model_weights["weights"] = model_weights
+    list_model_weights[queue_name] = model_weights
     celery_aggregate.apply_async(
         kwargs={
             "list_local_models": list_model_weights,
