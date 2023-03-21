@@ -4,13 +4,13 @@ import numpy as np
 from tensorflow.keras.backend import clear_session
 
 import utils, glob
+import os
 
 
 def getLayerIndexByName(model, layername):
     for idx, layer in enumerate(model.layers):
         if layer.name == layername:
             return idx
-
 
 def aggregation(model_path):
     global_model = utils.model_init()
@@ -67,6 +67,12 @@ class Aggregator:
                 model.save_weights(
                     f"aggregator_storage/trainer_models/{queue_name}_ep{global_epoch}.h5"
                 )
+            print(list_local_models.keys())
+            while True:
+                print(list_local_models.keys())
+                if len(list_local_models.keys()) == glob.glob('aggregator_storage/trainer_models/*_ep{global_epoch}.h5'):
+                    break
+
             model_path = [f"aggregator_storage/aggregator_models/model_ep{global_epoch-1}.h5"]
             for p in glob.glob(f"aggregator_storage/trainer_models/*_ep{global_epoch}.h5"):
                 model_path.append(p)
