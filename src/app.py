@@ -2,20 +2,16 @@ import configparser
 
 from celery import Celery
 
-from learning.config import CONFIG
-
 config = configparser.ConfigParser()
 config.read("../config.ini")
 
 PYAMQP_IP = config["DISTRIBUTION"]["PYAMQP_IP"]
-AGGRGATOR_IP = config["DISTRIBUTION"]["AGGREGATOR_IP"]
-TRAINER_IP = config["DISTRIBUTION"]["TRAINER_IP"]
-
+NUM_TRAINERS = int(config["DISTRIBUTION"]["NUM_TRAINERS"])
 
 def task_routes_init() -> dict:
     result = {}
     result["learning.tasks.celery_aggregate"] = {"queue": "aggregator"}
-    trainers_bound = int(CONFIG["training"]["num_trainers"]) + 1
+    trainers_bound = NUM_TRAINERS + 1
     for idx in range(1, trainers_bound):
         result["learning.tasks.celery_train"] = {"queue": f"trainer{idx}"}
     return result

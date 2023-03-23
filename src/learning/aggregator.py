@@ -65,16 +65,11 @@ class Aggregator:
                 model_weights = np.asarray(model_weights, dtype=object)
                 model = utils.load_weights(model, model_weights)
                 model.save_weights(
-                    f"aggregator_storage/trainer_models/{queue_name}_ep{global_epoch}.h5"
+                    f"aggregator_storage/trainer_models/{queue_name}_ep{global_epoch-1}.h5"
                 )
-            print(list_local_models.keys())
-            while True:
-                print(list_local_models.keys())
-                if len(list_local_models.keys()) == glob.glob('aggregator_storage/trainer_models/*_ep{global_epoch}.h5'):
-                    break
 
             model_path = [f"aggregator_storage/aggregator_models/model_ep{global_epoch-1}.h5"]
-            for p in glob.glob(f"aggregator_storage/trainer_models/*_ep{global_epoch}.h5"):
+            for p in glob.glob(f"aggregator_storage/trainer_models/*_ep{global_epoch-1}.h5"):
                 model_path.append(p)
             aggregated_model = aggregation(model_path)
             model.save_weights(
