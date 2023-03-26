@@ -1,7 +1,9 @@
 import utils, glob 
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.utils import to_categorical
-
+import configparser
+config = configparser.ConfigParser()
+config.read("../config.ini")
 
 
 def load_dataset():
@@ -22,12 +24,13 @@ def calculate_loss_acccuracy(path):
     loss, acc = model.evaluate(X_test, Y_test)
     return loss, acc
 
-NUM_GLOBAL_EPOCH = 3
-NUM_CLIENTS = 10
+NUM_CLIENTS  = int(config["DISTRIBUTION"]["NUM_TRAINERS"])
+NUM_GLOBAL_EPOCH = int(config["TRAINING"]["NUM_COMMUNICATION_ROUNDS"])
+# NUM_GLOBAL_EPOCH = 50
 
 # AGGREGATOR STORAGE
 
-file_o = open('evaluation/aggregator_storage/aggregator.csv','w')
+file_o = open('evaluation/aggregator.csv','w')
 file_o.write(f'ep,loss,accuracy\n')
 for e in range(NUM_GLOBAL_EPOCH):
     loss, acc = calculate_loss_acccuracy(f'aggregator_storage/aggregator_models/model_ep{e}.h5')
@@ -35,10 +38,9 @@ for e in range(NUM_GLOBAL_EPOCH):
 file_o.close()
 
 for c in range(1,NUM_CLIENTS+1):
-    file_o = open(f'evaluation/aggregator_storage/trainer{c}.csv','w')
+    file_o = open(f'evaluation/trainer{c}.csv','w')
     file_o.write(f'ep,loss,accuracy\n')
     for e in range(1,NUM_GLOBAL_EPOCH):
         loss, acc = calculate_loss_acccuracy(f'aggregator_storage/trainer_models/trainer{c}_ep{e}.h5')
         file_o.write(f'{e},{loss},{acc}\n')
     file_o.close()
-

@@ -7,7 +7,7 @@ config = configparser.ConfigParser()
 config.read("../config.ini")
 
 NUM_TRAINERS = int(config["DISTRIBUTION"]["NUM_TRAINERS"])
-NUM_COMMUNICATION_ROUNDS = int(config["DISTRIBUTION"]["NUM_COMMUNICATION_ROUNDS"])
+NUM_COMMUNICATION_ROUNDS = int(config["TRAINING"]["NUM_COMMUNICATION_ROUNDS"])
 
 def main():
     list_local_models = {}
@@ -21,6 +21,9 @@ def main():
             result_list.append(res)
         for idx in range(1,NUM_TRAINERS+1):
             list_local_models[f'trainer{idx}'] = result_list[idx-1].get(propagate=False)
+
+
+            
         # res1 = celery_train.apply_async(kwargs={"global_model": aggregated_model, "global_epoch": r, "queue_name": 'trainer1'},queue='trainer1')
         # res2 = celery_train.apply_async(kwargs={"global_model": aggregated_model, "global_epoch": r, "queue_name": 'trainer2'},queue='trainer2')
         # list_local_models['trainer1'] = res1.get(propagate=False)
