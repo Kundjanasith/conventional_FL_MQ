@@ -3,10 +3,14 @@ import configparser
 from celery import Celery
 
 config = configparser.ConfigParser()
-config.read("../config.ini")
+config.read("./config.ini")
 
 PYAMQP_IP = config["DISTRIBUTION"]["PYAMQP_IP"]
 NUM_TRAINERS = int(config["DISTRIBUTION"]["NUM_TRAINERS"])
+USER = config["CREDENTIALS"]["USERID"]
+PASSWD = config["CREDENTIALS"]["PASSWD"]
+VHOST = config["CREDENTIALS"]["VHOST"]
+
 
 def task_routes_init() -> dict:
     result = {}
@@ -20,7 +24,7 @@ def task_routes_init() -> dict:
 app = Celery(
     "fedlearn",
     backend="rpc://",
-    broker=f"pyamqp://myuser:mypassword@{PYAMQP_IP}:5672/myvhost",
+    broker=f"pyamqp://{USER}:{PASSWD}@{PYAMQP_IP}:5672/{VHOST}",
     include=["learning.tasks"],
 )
 

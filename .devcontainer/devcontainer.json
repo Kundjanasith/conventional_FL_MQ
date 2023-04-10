@@ -1,10 +1,35 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
-	"name": "Ubuntu",
+	"name": "Conventional Federated Learning Dev Container",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy"
-
+    "build": { "dockerfile": "Dockerfile", "context": ".." },
+    "customizations": {
+        "vscode": {
+          "settings": {
+            "terminal.integrated.shell.linux": "/bin/bash",
+            "terminal.integrated.profiles.linux": {
+              "bash": {
+                "path": "/usr/bin/bash",
+                "overrideName": true
+              }
+            },
+            "terminal.integrated.defaultProfile.linux": "bash"
+          },
+          "extensions": [
+            "ms-python.black-formatter",
+            "ms-python.isort",
+            "ms-python.vscode-pylance",
+            "ms-python.python",
+            "ms-python.flake8",
+            "VisualStudioExptTeam.vscodeintellicode",
+            "eamodio.gitlens",
+            "ryu1kn.partial-diff",
+            "esbenp.prettier-vscode",
+            "streetsidesoftware.code-spell-checker"
+          ]
+        }
+      }
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 

@@ -1,0 +1,31 @@
+services:
+  mq:
+    image: rabbitmq:management
+    container_name: aggrabbit
+    ports:
+      - "15671:15671/tcp"
+      - "15672:15672/tcp"
+      - "15691:15691/tcp"
+      - "15692:15692/tcp"
+      - "25672:25672/tcp"
+      - "4369:4369/tcp"
+      - "5671:5671/tcp"
+      - "5672:5672/tcp"
+    volumes:
+        - ./mq/config/:/etc/rabbitmq/conf.d/
+  aggregator:
+    build: .
+    command: aggregator
+    volumes:
+      - ./aggregator_storage:/conventional_FL_MQ/aggregator_storage
+    depends_on:
+      - mq
+  trainer:
+    build: .
+    command: trainer
+    volumes:
+      - ./trainer_storage:/conventional_FL_MQ/trainer_storage
+    depends_on:
+      - mq
+      - aggregator
+
