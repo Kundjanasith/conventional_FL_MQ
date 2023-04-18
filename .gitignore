@@ -4,4 +4,3 @@ venv/
 .Python
 aggregator_storage/
 trainer_storage/
-mq/
