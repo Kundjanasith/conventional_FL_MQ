@@ -17,12 +17,12 @@ from learning.trainer import Trainer
 #     CONFIG["sender_name"] = sender_name
 
 
-@app.task()
-def celery_aggregate(list_local_models: dict, global_epoch: int) -> None:
-    aggr = Aggregator()
-    print(list_local_models.keys())
-    aggregated_model = aggr.aggregate(list_local_models, global_epoch)
-    return aggregated_model
+# @app.task()
+# def celery_aggregate(list_local_models: dict, global_epoch: int) -> None:
+#     aggr = Aggregator()
+#     print(list_local_models.keys())
+#     aggregated_model = aggr.aggregate(list_local_models, global_epoch)
+#     return aggregated_model
 
 
 @app.task()

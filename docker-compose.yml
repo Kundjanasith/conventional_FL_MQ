@@ -13,13 +13,6 @@ services:
       - "5672:5672/tcp"
     volumes:
         - ./mq/config/:/etc/rabbitmq/conf.d/
-  aggregator:
-    build: .
-    command: aggregator
-    volumes:
-      - ./aggregator_storage:/conventional_FL_MQ/aggregator_storage
-    depends_on:
-      - mq
   trainer:
     build: .
     command: trainer
@@ -27,5 +20,13 @@ services:
       - ./trainer_storage:/conventional_FL_MQ/trainer_storage
     depends_on:
       - mq
-      - aggregator
+  aggregator:
+    build: .
+    command: aggregator
+    volumes:
+      - ./aggregator_storage:/conventional_FL_MQ/aggregator_storage
+    depends_on:
+      - mq
+      - trainer
+  
 

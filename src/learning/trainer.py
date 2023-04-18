@@ -46,7 +46,7 @@ class NumpyArrayEncoder(JSONEncoder):
 class Trainer:
     def __init__(self):
         config = configparser.ConfigParser()
-        config.read("../config.ini")
+        config.read("./config.ini")
         self.num_samples = int(config["TRAINING"]["NUM_SAMPLES"])
         self.local_batch_size = int(config["TRAINING"]["LOCAL_BATCH_SIZE"])
         self.local_epochs = int(config["TRAINING"]["LOCAL_EPOCHS"])

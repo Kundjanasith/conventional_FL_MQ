@@ -14,7 +14,7 @@ VHOST = config["CREDENTIALS"]["VHOST"]
 
 def task_routes_init() -> dict:
     result = {}
-    result["learning.tasks.celery_aggregate"] = {"queue": "aggregator"}
+    # result["learning.tasks.celery_aggregate"] = {"queue": "aggregator"}
     trainers_bound = NUM_TRAINERS + 1
     for idx in range(1, trainers_bound):
         result["learning.tasks.celery_train"] = {"queue": f"trainer{idx}"}

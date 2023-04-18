@@ -3,7 +3,7 @@ import configparser
 from celery import Celery
 
 from learning.aggregator import Aggregator
-from learning.tasks import celery_aggregate, celery_train
+from learning.tasks import celery_train
 
 config = configparser.ConfigParser()
 config.read("./config.ini")
